@@ -95,9 +95,6 @@ class Level {
     this.finishDelay = 1;
   }
   isFinished() {
-    console.clear();
-    console.log(this.status);
-    console.log(this.finishDelay);
     if (this.status !== null && this.finishDelay < 0) {
       return true;
     }
@@ -109,14 +106,18 @@ class Level {
     if (!Actor.prototype.isPrototypeOf(actor) || !actor) {
       throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
     }
-    console.clear();
+    console.log("*****");
+    console.log(actor);
 
-    for (const item of this.actors) {
-      console.log(item);
-      console.log(actor.isIntersect(item));
-      if (actor.isIntersect(item)) {
-        return item;
-      } else {
+    if (this.actors.length > 1) {
+      for (const item of this.actors) {
+        console.log(item);
+        console.log(actor.isIntersect(item));
+        console.log(actor.pos.x, item.pos.x);
+        console.log(actor.pos.y, item.pos.y);
+        if (actor.isIntersect(item)) {
+          return item;
+        }
         return undefined;
       }
     }
@@ -126,7 +127,8 @@ class Level {
     if (
       !Vector.prototype.isPrototypeOf(position) ||
       !Vector.prototype.isPrototypeOf(size) ||
-      !actor
+      !position ||
+      !size
     ) {
       throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
     }
@@ -136,10 +138,10 @@ class Level {
     if (!Actor.prototype.isPrototypeOf(actor) || !actor) {
       throw new Error("Можно прибавлять к вектору только вектор типа Actor.");
     }
-    const actorIndex = this.actors.indexOf(Actor);
+    const actorIndex = this.actors.indexOf(actor);
     this.actors = [
-      ...this.actors.slice(0, actorIndex + 1),
-      ...this.actors.slice(actorIndex)
+      ...this.actors.slice(0, actorIndex),
+      ...this.actors.slice(actorIndex + 1)
     ];
   }
 
@@ -153,6 +155,17 @@ class Level {
       }
 
       return true;
+    }
+  }
+
+  playerTouched(type, actor) {
+    if (["lava", "fireball"].includes(type)) {
+      this.status = "lost";
+    } else if (type === "coin") {
+      this.removeActor(actor);
+      if (this.actors.find(a => a.type === "coin")) {
+        this.status = "won";
+      }
     }
   }
 }
