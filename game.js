@@ -78,3 +78,41 @@ class Actor {
     );
   }
 }
+
+class Level {
+  constructor(grid = [], actors = []) {
+    this.grid = grid;
+    this.actors = actors;
+    this.player = actors.find(actor => actor.type === "player");
+    this.height = grid.length;
+    this.width = grid.reduce((acc, item) => {
+      if (acc < item.length) {
+        return item.length;
+      }
+      return acc;
+    }, 0);
+    this.status = null;
+    this.finishDelay = 1;
+  }
+  isFinished() {
+    console.clear();
+    console.log(this.status);
+    console.log(this.finishDelay);
+    if (this.status !== null && this.finishDelay < 0) {
+      return true;
+    }
+    // console.clear();
+
+    return false;
+  }
+
+  actorAt(actor) {
+    if (!Actor.prototype.isPrototypeOf(actor) || !actor) {
+      throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
+    }
+    const a = this.actors.find(item => !item.isIntersect(actor));
+
+    console.log(a);
+    return a;
+  }
+}
