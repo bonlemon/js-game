@@ -101,7 +101,6 @@ class Level {
     if (this.status !== null && this.finishDelay < 0) {
       return true;
     }
-    // console.clear();
 
     return false;
   }
@@ -110,9 +109,50 @@ class Level {
     if (!Actor.prototype.isPrototypeOf(actor) || !actor) {
       throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
     }
-    const a = this.actors.find(item => !item.isIntersect(actor));
+    console.clear();
 
-    console.log(a);
-    return a;
+    for (const item of this.actors) {
+      console.log(item);
+      console.log(actor.isIntersect(item));
+      if (actor.isIntersect(item)) {
+        return item;
+      } else {
+        return undefined;
+      }
+    }
+  }
+
+  obstacleAt(position, size) {
+    if (
+      !Vector.prototype.isPrototypeOf(position) ||
+      !Vector.prototype.isPrototypeOf(size) ||
+      !actor
+    ) {
+      throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
+    }
+  }
+
+  removeActor(actor) {
+    if (!Actor.prototype.isPrototypeOf(actor) || !actor) {
+      throw new Error("Можно прибавлять к вектору только вектор типа Actor.");
+    }
+    const actorIndex = this.actors.indexOf(Actor);
+    this.actors = [
+      ...this.actors.slice(0, actorIndex + 1),
+      ...this.actors.slice(actorIndex)
+    ];
+  }
+
+  noMoreActors(type) {
+    if (!type) {
+      return true;
+    }
+    for (const item of this.actors) {
+      if (item.type === type) {
+        return false;
+      }
+
+      return true;
+    }
   }
 }
