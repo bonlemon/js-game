@@ -107,18 +107,17 @@ class Level {
       throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
     }
     console.log("*****");
+    console.clear();
     console.log(actor);
+    console.log(this.actors);
 
     if (this.actors.length > 1) {
       for (const item of this.actors) {
         console.log(item);
         console.log(actor.isIntersect(item));
-        console.log(actor.pos.x, item.pos.x);
-        console.log(actor.pos.y, item.pos.y);
         if (actor.isIntersect(item)) {
           return item;
         }
-        return undefined;
       }
     }
   }
@@ -131,6 +130,30 @@ class Level {
       !size
     ) {
       throw new Error("Можно прибавлять к вектору только вектор типа Vector.");
+    }
+
+    const x = position.x + size.x;
+    const y = position.y + size.y;
+
+    if (Number.isInteger(x) || Number.isInteger(y)) {
+      if (this.grid[y] && this.grid[y][x]) {
+        return this.grid[y][x];
+      } else if (position.y >= this.grid.length) {
+        return "lava";
+      } else if (
+        position.x < 0 ||
+        x > this.width ||
+        y > this.height ||
+        position.y < 0
+      ) {
+        return "wall";
+      }
+    } else {
+      const x = Math.floor(position.x + size.x);
+      const y = Math.floor(position.y + size.y);
+      if (this.grid[y][x]) {
+        return this.grid[y][x];
+      }
     }
   }
 
